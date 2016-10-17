@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<head>
+	<title>Game</title>
+
+	<link href="assets/css/reset.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css">
+	<script src="assets/javascript/game.js"></script>
+
+</head>
+<body>
+
+
+	<header>
+		<h1>Star Wars RPG</h1>
+	</header>
+
+	<div id="buttons"></div>
+	<div id="emptyDiv"></div>
+	<div id="output"></div>
+
+	<div id="playerSelect"></div>
+	<div id="opponentSelect"></div>
+	<div id="defenderArea"></div>
+
+	<button id="fightbtn" class="btn btn-primary fight" value="fight"><h1>fight</h1></button>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+		
+	<script type="text/javascript">
+
+		//global declarations
+		var fighters = [];
+		var player;
+		var opponent;
+		var playerSelected = false;
+		var opponentSelected = false;
+
+		//initializing fighters
+		var jarjar = Object.create(fighter);
+		jarjar.initialize("Jar Jar Binks", 1000, 5, 2);
+
+		var luke = Object.create(fighter);
+		luke.initialize("Luke Skywalker", 100, 10, 20);
+
+		var vader = Object.create(fighter);
+		vader.initialize("Darth Vader", 150, 20, 10);
+
+		var obiwan = Object.create(fighter);
+		obiwan.initialize("Obi Wan Kenobi", 100, 50, 5);
+
+		//feeding them into the array
+		fighters.push(jarjar);
+		fighters.push(luke);
+		fighters.push(vader);
+		fighters.push(obiwan);
+
+		$( document ).ready(function() {
+/*
+			if (playerSelected == false && opponentSelected == false ) {
+				$("#emptyDiv").html("<h1>choose fighter!</h1>");
+								$("#emptyDiv").html("<h1>choose opponent!</h1>");
+								$("#emptyDiv").html("<h1>time to fight!</h1>");	
+			}
+			else if (playerSelected == true && opponentSelected == false ) {
+				$("#emptyDiv").html("<h1>choose opponent!</h1>");
+			}
+			else {
+				$("#emptyDiv").html("<h1>time to fight!</h1>");	
+			}*/
+
+
+			buildButtonsPlayer();
+			//buildButtonsOpponent();
+
+			$('.player-button').on('click', function() {
+				console.log("this: " + $(this).data('name') );
+
+				for (var i = 0; i < fighters.length; i++) {
+					if(fighters[i].name == $(this).data('name') ) {
+						player = fighters[i];
+						playerSelected = true;
+						fighters.splice(i, 1);
+					}
+				} 
+				$(this).hide();
+				hideButtonsPlayer();
+				buildButtonsOpponent();
+			});
+
+			$('.opponent-button').on('click', function() {
+				console.log("opponent button pushed");
+				console.log("this: " + $(this).data('name') );
+
+				for (var i = 0; i < fighters.length; i++) {
+					if(fighters[i].name == $(this).data('name') ) {
+						opponent = fighters[i];
+						opponentSelected = true;
+						fighters.splice(i, 1);
+						$(this).hide();
+					}
+				}
+
+				//clearButtonsOpponent();
+				//buildButtonsFight();
+				hideButtonsOpponent();
+			});
+
+
+			
+			$('.fight').on('click', function() {
+				
+				player.fight(opponent);
+
+				console.log("player :"+ player.isAlive());
+
+				if(player.isAlive() == false) {
+					alert("you ded!");
+				}
+				else if(opponent.isAlive() == false) {
+					alert("pick someone else");
+					opponentSelected = false;
+					showButtonsOpponent();
+					//buildButtons();
+				}
+
+
+			});
+
+
+
+		});
+
+
+		function buildButtonsPlayer() {
+
+			//build the fighter buttons
+			for (var i = 0; i < fighters.length; i++) {
+				var b = $("<button>");
+				b.addClass("player-button player");
+				
+				b.attr("data-name", fighters[i].name);
+				b.html(fighters[i].name); //this is HTML
+				$("#playerSelect").append(b);
+			}
+		}
+
+		function hideButtonsPlayer() {
+			var pSelect = $('#playerSelect');
+			pSelect.hide();
+		}
+
+		function showButtonsPlayer() {
+			var pSelect = $('#playerSelect');
+			pSelect.show();
+		}
+
+		function buildButtonsOpponent() {
+			console.log("opponent buttons")
+			//build the fighter buttons
+			for (var i = 0; i < fighters.length; i++) {
+				var b = $("<button>");
+				b.addClass("opponent-button opponent");
+				
+				b.attr("data-name", fighters[i].name);
+				b.html(fighters[i].name); //this is HTML
+				$("#opponentSelect").append(b);
+			}
+		}
+
+		function hideButtonsOpponent() {
+			var oSelect = $('#opponentSelect');
+			oSelect.hide();
+		}
+
+		function showButtonsOpponent() {
+			var oSelect = $('#opponentSelect');
+			oSelect.show();
+		}
+
+
+
+
+
+
+	</script>
+
+
+
+</body>

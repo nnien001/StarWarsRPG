@@ -1,1 +1,6 @@
-console.log("style sheet in use");
+body {
+	background: url("../images/swbg.gif");
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center; 
+}

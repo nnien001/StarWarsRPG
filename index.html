@@ -15,15 +15,16 @@
 		<h1>Star Wars RPG</h1>
 	</header>
 
-	<div id="buttons"></div>
-	<div id="emptyDiv"></div>
-	<div id="output"></div>
+	<div id="instructions"></div>
 
-	<div id="playerSelect"></div>
-	<div id="opponentSelect"></div>
+	<div id="fighterSelect"></div>
+
 	<div id="defenderArea"></div>
+	<div id="outputArea"></div>
+	<button id="fightBtn" class="btn btn-primary fight" value="fight"><h1>fight</h1></button>
 
-	<button id="fightbtn" class="btn btn-primary fight" value="fight"><h1>fight</h1></button>
+    <div id="outputLog"></div>
+
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 		
@@ -35,6 +36,7 @@
 		var opponent;
 		var playerSelected = false;
 		var opponentSelected = false;
+		var wins = 0;
 
 		//initializing fighters
 		var jarjar = Object.create(fighter);
@@ -44,7 +46,7 @@
 		luke.initialize("Luke Skywalker", 100, 10, 20);
 
 		var vader = Object.create(fighter);
-		vader.initialize("Darth Vader", 150, 20, 10);
+		vader.initialize("Darth Vader", 150, 999, 10);
 
 		var obiwan = Object.create(fighter);
 		obiwan.initialize("Obi Wan Kenobi", 100, 50, 5);
@@ -55,73 +57,67 @@
 		fighters.push(vader);
 		fighters.push(obiwan);
 
+		//building buttons
+		for (var i = 0; i < fighters.length; i++) {
+			var b = $("<button>");
+			b.addClass("fighter-button fighter");
+			
+			b.attr("data-name", fighters[i].name);
+			b.html(fighters[i].name); //this is HTML
+			$("#fighterSelect").append(b);
+		}
+
+		//initializing
+		hideFightBtn();
+		writeInstructions("pick a fighter");
+
 		$( document ).ready(function() {
-/*
-			if (playerSelected == false && opponentSelected == false ) {
-				$("#emptyDiv").html("<h1>choose fighter!</h1>");
-								$("#emptyDiv").html("<h1>choose opponent!</h1>");
-								$("#emptyDiv").html("<h1>time to fight!</h1>");	
-			}
-			else if (playerSelected == true && opponentSelected == false ) {
-				$("#emptyDiv").html("<h1>choose opponent!</h1>");
-			}
-			else {
-				$("#emptyDiv").html("<h1>time to fight!</h1>");	
-			}*/
 
-
-			buildButtonsPlayer();
-			//buildButtonsOpponent();
-
-			$('.player-button').on('click', function() {
-				console.log("this: " + $(this).data('name') );
-
+			$('.fighter-button').on('click', function() {
 				for (var i = 0; i < fighters.length; i++) {
 					if(fighters[i].name == $(this).data('name') ) {
-						player = fighters[i];
-						playerSelected = true;
-						fighters.splice(i, 1);
+						if (playerSelected == false) {
+							player = fighters[i];
+							playerSelected = true;
+							$(this).hide();
+							writeInstructions("pick an opponent");
+						} else {
+							opponent = fighters[i];
+							opponentSelected = true;
+							$(this).hide();
+							hideFighters();
+							showFightBtn();
+							writeInstructions("fight it out!");
+
+						}
+
 					}
 				} 
-				$(this).hide();
-				hideButtonsPlayer();
-				buildButtonsOpponent();
+
 			});
-
-			$('.opponent-button').on('click', function() {
-				console.log("opponent button pushed");
-				console.log("this: " + $(this).data('name') );
-
-				for (var i = 0; i < fighters.length; i++) {
-					if(fighters[i].name == $(this).data('name') ) {
-						opponent = fighters[i];
-						opponentSelected = true;
-						fighters.splice(i, 1);
-						$(this).hide();
-					}
-				}
-
-				//clearButtonsOpponent();
-				//buildButtonsFight();
-				hideButtonsOpponent();
-			});
-
 
 			
 			$('.fight').on('click', function() {
 				
 				player.fight(opponent);
 
-				console.log("player :"+ player.isAlive());
-
 				if(player.isAlive() == false) {
-					alert("you ded!");
+					alert("You're dead! Refresh the game and try again");
+					hideFightBtn();
 				}
 				else if(opponent.isAlive() == false) {
-					alert("pick someone else");
+					++wins;
 					opponentSelected = false;
-					showButtonsOpponent();
-					//buildButtons();
+					hideFightBtn();
+					showFighters();
+
+					if (wins + 1 == fighters.length) {
+						alert("WINNER!");
+					}
+					else {
+						writeInstructions("you've won. Pick another opponent");
+					}
+
 				}
 
 
@@ -132,53 +128,29 @@
 		});
 
 
-		function buildButtonsPlayer() {
-
-			//build the fighter buttons
-			for (var i = 0; i < fighters.length; i++) {
-				var b = $("<button>");
-				b.addClass("player-button player");
-				
-				b.attr("data-name", fighters[i].name);
-				b.html(fighters[i].name); //this is HTML
-				$("#playerSelect").append(b);
-			}
+		function showFightBtn() {
+			var btn = $('#fightBtn');
+			btn.show();
 		}
 
-		function hideButtonsPlayer() {
-			var pSelect = $('#playerSelect');
-			pSelect.hide();
+		function hideFightBtn() {
+			var btn = $('#fightBtn');
+			btn.hide();
 		}
 
-		function showButtonsPlayer() {
-			var pSelect = $('#playerSelect');
-			pSelect.show();
+		function hideFighters() {
+			var btn = $('#fighterSelect')
+			btn.hide();
 		}
 
-		function buildButtonsOpponent() {
-			console.log("opponent buttons")
-			//build the fighter buttons
-			for (var i = 0; i < fighters.length; i++) {
-				var b = $("<button>");
-				b.addClass("opponent-button opponent");
-				
-				b.attr("data-name", fighters[i].name);
-				b.html(fighters[i].name); //this is HTML
-				$("#opponentSelect").append(b);
-			}
+		function showFighters() {
+			var btn = $('#fighterSelect')
+			btn.show();
 		}
 
-		function hideButtonsOpponent() {
-			var oSelect = $('#opponentSelect');
-			oSelect.hide();
+		function writeInstructions(words) {
+			$("#instructions").html(words);
 		}
-
-		function showButtonsOpponent() {
-			var oSelect = $('#opponentSelect');
-			oSelect.show();
-		}
-
-
 
 
 

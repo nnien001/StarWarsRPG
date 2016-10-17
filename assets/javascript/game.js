@@ -40,11 +40,18 @@ console.log("javascript included");
 		},
 
 		counter: function() {
-			var dmg = (Math.floor(Math.random()*this.attackCounter) );
-			console.log(this.name + " counters for " + dmg);
-			this.output(this.name + " counters for " + dmg);
 
-			return dmg;
+			if (this.isAlive() == true) { //dead guys can't counter
+
+				var dmg = (Math.floor(Math.random()*this.attackCounter) );
+				console.log(this.name + " counters for " + dmg);
+				this.output(this.name + " counters for " + dmg);
+
+				return dmg;
+			}
+			else {
+				return 0;
+			}
 		},
 
 		receiveDmg: function(dmg) {
@@ -59,7 +66,7 @@ console.log("javascript included");
 				this.attackBase = 0;
 				this.attackCounter = 0;
 				console.log(this.name + " is dead");
-				output(this.name + " is dead");
+				this.output(this.name + " is dead");
 			}
 		},
 
@@ -75,7 +82,7 @@ console.log("javascript included");
 		output: function(msg) {
 			var newDiv = $('<div>');
 			newDiv.html(msg);
-			$('#output').append(newDiv); //not sure if scoping here is appropriate. lacks encapsulation.
+			$('#outputLog').append(newDiv); //not sure if scoping here is appropriate. lacks encapsulation.
 
 		}
 

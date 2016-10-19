@@ -22,7 +22,7 @@
 	</div>
 
 	<div class="container">
-  		<div class="jumbotron">
+
     		<div class="row">
     			<div class="col-md-4">
 					<div id="attacker"></div>
@@ -32,7 +32,7 @@
 					<div id="defender"></div>
 				</div>
     		</div> 
-  		</div>
+
 	</div>
 
 	
@@ -108,18 +108,18 @@
 						if (playerSelected == false) {
 							player = fighters[i];
 							playerSelected = true;
-							$(this).hide();
+							
 							writeInstructions("pick an opponent");
 							console.log($(this));
 							console.log(this);
 							
 
-							$(this).appendTo("#attacker");
+							$("#attacker").append(this);
 
 						} else {
 							opponent = fighters[i];
 							opponentSelected = true;
-							$(this).hide();
+							$("#defender").append(this);
 							hideFighters();
 							showFightBtn();
 							writeInstructions("fight it out!");
@@ -146,6 +146,7 @@
 					opponentSelected = false;
 					hideFightBtn();
 					showFighters();
+					$("#defender").empty();
 
 					if (wins == fighters.length - 1) {
 						alert("WINNER!");

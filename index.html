@@ -60,17 +60,21 @@
 		var wins = 0;
 
 		//initializing fighters
+		//everyone's favorite punching bag. Good to grind on unless you have low HP.
 		var jarjar = Object.create(fighter);
-		jarjar.initialize("Jar Jar Binks", "assets/images/jarjar.jpg", 1000, 5, 2);
+		jarjar.initialize("Jar Jar Binks", "assets/images/jarjar.jpg", 250, 10, 15);
 
+		//standard mcboringpants
 		var luke = Object.create(fighter);
-		luke.initialize("Luke Skywalker", "assets/images/luke.jpg", 100, 10, 20);
+		luke.initialize("Luke Skywalker", "assets/images/luke.jpg", 100, 50, 50);
 
+		//hits hard all around. probably a 50/50 if you fight him first.
 		var vader = Object.create(fighter);
-		vader.initialize("Darth Vader", "assets/images/vader.jpg", 150, 999, 10);
+		vader.initialize("Darth Vader", "assets/images/vader.jpg", 75, 200, 100);
 
+		//must be killed in one blow. lethal counter.
 		var obiwan = Object.create(fighter);
-		obiwan.initialize("Obi Wan Kenobi", "assets/images/obiwan.jpg", 100, 50, 5);
+		obiwan.initialize("Obi Wan Kenobi", "assets/images/obiwan.jpg", 50, 50, 500);
 
 		//feeding them into the array
 		fighters.push(jarjar);
@@ -92,7 +96,10 @@
 
 			var panelHeader = '<div class="panel-heading"><h3 class="panel-title">'+b.data('name')+'</h3></div>';
 			var panelBody = '<div class="panel-body"><img src="'+ b.data('img') +'"/></div>';
-			var panelFooter = '<div class="panel-footer">'+ 'hp: ' + b.data('hp')+ '<br> attack: ' + b.data('attack') + '<br> counter: ' + b.data('counter') +'</div>';
+			var panelFooterHP = '<div class="hp">hp: ' + b.data('hp') + '</div>';
+			var panelFooterAttack = '<div class="attack">attack: ' + b.data('attack') + '</div>';
+			var panelFooterCounter = '<div class="counter">counter: ' + b.data('counter') + '</div>';
+			var panelFooter = '<div class="panel-footer">'+ panelFooterHP+ panelFooterAttack + panelFooterCounter + '</div>';
 			var panel = '<div class="col-md-3"><div class="panel panel-default">' + panelHeader + panelBody + panelFooter + '</div></div>';
 
 			b.html(panel);
@@ -107,6 +114,7 @@
 		$( document ).ready(function() {
 
 			$('.fighter-button').on('click', function() {
+				$(this).unbind('click'); //have to do this otherwise player can target self!
 				for (var i = 0; i < fighters.length; i++) {
 					if(fighters[i].name == $(this).data('name') ) {
 						if (playerSelected == false) {
@@ -116,7 +124,7 @@
 							writeInstructions("pick an opponent");
 
 							$("#attacker").append(this);
-							this.removeClass('.fighter-button');
+							
 
 						} else if(opponentSelected == false)
 						{
@@ -136,9 +144,10 @@
 
 			
 			$('.fight').on('click', function() {
-				
 
 				player.fight(opponent);
+				updatePlayerStats();
+				updateOpponentStats();
 
 				if(player.isAlive() == false) {
 					writeInstructions("You died! Refresh the game to start over");
@@ -160,8 +169,6 @@
 					}
 
 				}
-
-
 			});
 
 

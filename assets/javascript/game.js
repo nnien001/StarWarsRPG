@@ -114,6 +114,12 @@ console.log("javascript included");
 		$("#instructions").html(words);
 	}
 
+	function updatePlayerStats() {
+		$(".hp", "#attacker").html("hp: " + player.currentHP);
+		$(".attack", "#attacker").html("attack: " + (player.attackBase * player.attackMultiplier));
+	}
 
-
+	function updateOpponentStats() {
+		$(".hp", "#defender").html("hp: " + opponent.currentHP);
+	}
 

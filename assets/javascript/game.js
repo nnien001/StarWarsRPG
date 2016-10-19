@@ -2,15 +2,15 @@ console.log("javascript included");
 
 	var fighter = {
 		name: "",
-		maxHP: 100,
+		img: "",
 		currentHP: 100,
 		attackBase: 1,
 		attackCounter: 1,
 		attackMultiplier: 1,
 		alive: true,
-		initialize: function (newName, newHP, newAttack, newCounter) {
+		initialize: function (newName, newImg, newHP, newAttack, newCounter) {
 			this.name = newName;
-			this.maxHP = newHP;
+			this.img = newImg;
 			this.currentHP = newHP;
 			this.attackBase = newAttack;
 			this.attackCounter = newCounter;
@@ -87,3 +87,33 @@ console.log("javascript included");
 		}
 
 	}
+
+
+//global functions
+	function showFightBtn() {
+		var btn = $('.fightBtn');
+		btn.show();
+	}
+
+	function hideFightBtn() {
+		var btn = $('.fightBtn');
+		btn.hide();
+	}
+
+	function hideFighters() {
+		var btn = $('#fighterSelect')
+		btn.hide();
+	}
+
+	function showFighters() {
+		var btn = $('#fighterSelect')
+		btn.show();
+	}
+
+	function writeInstructions(words) {
+		$("#instructions").html(words);
+	}
+
+
+
+

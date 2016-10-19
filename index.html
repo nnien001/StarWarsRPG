@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-	<title>Game</title>
+	<title>Star Wars RPG</title>
 
 	<link href="assets/css/reset.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -12,17 +12,34 @@
 
 
 	<header>
-		<h1>Star Wars RPG</h1>
+		<div class="page-header"> <h1>Star Wars RPG</h1></div>
 	</header>
 
 	<div id="instructions"></div>
 
-	<div id="fighterSelect"></div>
+	<div class="container">
+		<div class="row" id="fighterSelect"></div>
+	</div>
+
+	<div class="container">
+  		<div class="jumbotron">
+    		<div class="row">
+    			<div class="col-md-4">
+					<div id="attacker"></div>
+    			</div>
+				<div class="col-md-4"><button class="btn btn-primary fightBtn fight">fight</button></div>
+				<div class="col-md-4 defender">
+					<div id="defender"></div>
+				</div>
+    		</div> 
+  		</div>
+	</div>
+
+	
 
 	<div id="defenderArea"></div>
 	<div id="outputArea"></div>
-	<button id="fightBtn" class="btn btn-primary fight" value="fight"><h1>fight</h1></button>
-
+	
     <div id="outputLog"></div>
 
 
@@ -40,16 +57,16 @@
 
 		//initializing fighters
 		var jarjar = Object.create(fighter);
-		jarjar.initialize("Jar Jar Binks", 1000, 5, 2);
+		jarjar.initialize("Jar Jar Binks", "assets/images/jarjar.jpg", 1000, 5, 2);
 
 		var luke = Object.create(fighter);
-		luke.initialize("Luke Skywalker", 100, 10, 20);
+		luke.initialize("Luke Skywalker", "assets/images/luke.jpg", 100, 10, 20);
 
 		var vader = Object.create(fighter);
-		vader.initialize("Darth Vader", 150, 999, 10);
+		vader.initialize("Darth Vader", "assets/images/vader.jpg", 150, 999, 10);
 
 		var obiwan = Object.create(fighter);
-		obiwan.initialize("Obi Wan Kenobi", 100, 50, 5);
+		obiwan.initialize("Obi Wan Kenobi", "assets/images/obiwan.jpg", 100, 50, 5);
 
 		//feeding them into the array
 		fighters.push(jarjar);
@@ -59,11 +76,23 @@
 
 		//building buttons
 		for (var i = 0; i < fighters.length; i++) {
-			var b = $("<button>");
+			var b = $("<div>");
+
 			b.addClass("fighter-button fighter");
 			
 			b.attr("data-name", fighters[i].name);
-			b.html(fighters[i].name); //this is HTML
+			b.attr("data-img", fighters[i].img);
+			b.attr("data-hp", fighters[i].currentHP);
+			b.attr("data-attack", fighters[i].attackBase * fighters[i].attackMultiplier);
+			b.attr("data-counter", fighters[i].attackCounter);
+
+			var panelHeader = '<div class="panel-heading"><h3 class="panel-title">'+b.data('name')+'</h3></div>';
+			var panelBody = '<div class="panel-body"><img src="'+ b.data('img') +'"/></div>';
+			var panelFooter = '<div class="panel-footer">'+ 'hp: ' + b.data('hp')+ '<br> attack: ' + b.data('attack') + '<br> counter: ' + b.data('counter') +'</div>';
+			var panel = '<div class="col-md-3"><div class="panel panel-default">' + panelHeader + panelBody + panelFooter + '</div></div>';
+
+			b.html(panel);
+
 			$("#fighterSelect").append(b);
 		}
 
@@ -81,6 +110,12 @@
 							playerSelected = true;
 							$(this).hide();
 							writeInstructions("pick an opponent");
+							console.log($(this));
+							console.log(this);
+							
+
+							$(this).appendTo("#attacker");
+
 						} else {
 							opponent = fighters[i];
 							opponentSelected = true;
@@ -99,6 +134,7 @@
 			
 			$('.fight').on('click', function() {
 				
+
 				player.fight(opponent);
 
 				if(player.isAlive() == false) {
@@ -111,7 +147,7 @@
 					hideFightBtn();
 					showFighters();
 
-					if (wins + 1 == fighters.length) {
+					if (wins == fighters.length - 1) {
 						alert("WINNER!");
 					}
 					else {
@@ -128,29 +164,6 @@
 		});
 
 
-		function showFightBtn() {
-			var btn = $('#fightBtn');
-			btn.show();
-		}
-
-		function hideFightBtn() {
-			var btn = $('#fightBtn');
-			btn.hide();
-		}
-
-		function hideFighters() {
-			var btn = $('#fighterSelect')
-			btn.hide();
-		}
-
-		function showFighters() {
-			var btn = $('#fighterSelect')
-			btn.show();
-		}
-
-		function writeInstructions(words) {
-			$("#instructions").html(words);
-		}
 
 
 

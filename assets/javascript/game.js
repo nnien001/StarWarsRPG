@@ -82,7 +82,7 @@ console.log("javascript included");
 		output: function(msg) {
 			var newDiv = $('<div>');
 			newDiv.html(msg);
-			$('#outputLog').append(newDiv); //not sure if scoping here is appropriate. lacks encapsulation.
+			$('#outputLog').prepend(newDiv); //not sure if scoping here is appropriate. lacks encapsulation.
 
 		}
 

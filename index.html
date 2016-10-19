@@ -15,32 +15,36 @@
 		<div class="page-header"> <h1>Star Wars RPG</h1></div>
 	</header>
 
-	<div id="instructions"></div>
+	<div class="container">
+		<div class="panel panel-default">
+		  <div class="panel-body" id="instructions">
+		  </div>
+		</div>
+	</div>
 
 	<div class="container">
 		<div class="row" id="fighterSelect"></div>
 	</div>
 
 	<div class="container">
-
+		<div class = "jumbotron">
     		<div class="row">
-    			<div class="col-md-4">
-					<div id="attacker"></div>
-    			</div>
-				<div class="col-md-4"><button class="btn btn-primary fightBtn fight">fight</button></div>
-				<div class="col-md-4 defender">
-					<div id="defender"></div>
-				</div>
-    		</div> 
 
+					<div id="attacker"></div>
+    			
+				<div class="col-md-6">
+					<button class="btn btn-primary btn-block fightBtn fight">fight</button>
+					<div id="outputLog"></div>
+				</div>
+				
+					<div id="defender"></div>
+				
+    		</div> 
+		</div>
 	</div>
 
 	
-
-	<div id="defenderArea"></div>
-	<div id="outputArea"></div>
-	
-    <div id="outputLog"></div>
+    
 
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
@@ -110,13 +114,12 @@
 							playerSelected = true;
 							
 							writeInstructions("pick an opponent");
-							console.log($(this));
-							console.log(this);
-							
 
 							$("#attacker").append(this);
+							this.removeClass('.fighter-button');
 
-						} else {
+						} else if(opponentSelected == false)
+						{
 							opponent = fighters[i];
 							opponentSelected = true;
 							$("#defender").append(this);
@@ -124,7 +127,7 @@
 							showFightBtn();
 							writeInstructions("fight it out!");
 
-						}
+						} //else do nothing.
 
 					}
 				} 
@@ -138,7 +141,7 @@
 				player.fight(opponent);
 
 				if(player.isAlive() == false) {
-					alert("You're dead! Refresh the game and try again");
+					writeInstructions("You died! Refresh the game to start over");
 					hideFightBtn();
 				}
 				else if(opponent.isAlive() == false) {
@@ -149,10 +152,11 @@
 					$("#defender").empty();
 
 					if (wins == fighters.length - 1) {
-						alert("WINNER!");
+						writeInstructions("Victory!");
 					}
 					else {
 						writeInstructions("you've won. Pick another opponent");
+						
 					}
 
 				}
